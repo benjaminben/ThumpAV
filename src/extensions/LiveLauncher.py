@@ -36,6 +36,7 @@ buses.append(op('bus0'))
 class LiveLauncher:
 	def __init__(self, owner):
 		self.o = owner
+		self.SceneActive = op(ipar.Set).par.Current.eval()
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
@@ -58,9 +59,9 @@ class LiveLauncher:
 		return
 	def SetFx(self, cueIdx):
 		# have to offset - 1... TODO: please standardize
-		for i,t in enumerate(self.o.fetch('scene_viewing')["cues"][cueIdx - 1]["tracks"]):
+		for i,t in enumerate(Set.Scenes.val[Set.par.Current.eval()]["cues"][cueIdx - 1]["tracks"]):
 			bus = self.o.op('bus{}'.format(i))
-			bus.FillFx(t["plugins"])
+			bus.FillFx(t["plugins"].getRaw())
 	def SetOperand(self, cueIdx):
 		store.store('compOperand', operandMap[cueIdx, 0].val)
 		return
@@ -82,8 +83,8 @@ class LiveLauncher:
 		return
 	def SetCue(self, idx):
 #		print("BEGIN SWITCH FRAME:", absTime.frame) 
-		if self.o.fetch('scene_viewing')["id"] != self.o.fetch('scene_active')["id"]:
-			self.o.store('scene_active', op(ipar.Set).fetch(self.o.fetch('scene_viewing')["id"]))
+		if Set.par.Current.eval() != self.SceneActive:
+			self.SceneActive = op(ipar.Set).par.Current.eval()
 		store.store('cue', idx)
 		if idx <= 2:
 			store.store('pageStart', 1)
@@ -102,24 +103,23 @@ class LiveLauncher:
 	def AddCue(self, idx):
 		# have to offset - 1... TODO: please standardize
 		print("add cue at idx {}".format(idx - 1))
-		scene = json.loads(json.dumps(self.o.fetch('scene_viewing')))
 		new = Factory.Cue(numTracks=ext.Helpers.CalcNumTracks() - 1) # offset tracks for master holy shi*t
+		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
 		scene["cues"].insert(idx - 1, new)
-		self.o.store('scene_viewing', scene)
+		#self.o.store('scene_viewing', scene)
 		Set.SaveScene(scene)
-		if idx <= op('store').fetch('cue'):
-			op('store').store('cue', idx + 1)
-		self.HardRefresh()
+		if idx <= store.fetch('cue'):
+			store.store('cue', idx + 1)
+		#self.HardRefresh()
 		return
 	def DeleteCue(self, idx):
 		# have to offset - 1... TODO: please standardize
 		# BUG?: Should store cue idx as None if current scene deleted? Otherwise save before next launch will yield buggy behavior
 		print("delete cue at idx {}".format(idx - 1))
-		scene = json.loads(json.dumps(self.o.fetch('scene_viewing')))
+		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
 		scene["cues"].pop(idx - 1)
-		self.o.store('scene_viewing', scene)
 		Set.SaveScene(scene)
-		self.HardRefresh()
+		#self.HardRefresh()
 		return
 	def StageTrackFx(self, trackIdx):
 		for t in ctrl_panels:
@@ -127,53 +127,39 @@ class LiveLauncher:
 			if (e.panel.state == 1 and t.digits != trackIdx):
 				e.panel.state = 1
 		return
-	def HardRefresh(self):
-		sidActive = self.o.fetch("scene_active")["id"]
-		sidViewing = self.o.fetch("scene_viewing")["id"]
-		if (sidActive == sidViewing):
-			self.o.store("scene_viewing", Set.fetch(sidViewing))
-		self.o.store("scene_active", Set.fetch(sidActive)) 
-		return
 	def HandleSceneRename(self, prev, to):
-		active = self.o.fetch("scene_active")["id"]
-		viewing = self.o.fetch("scene_viewing")["id"]
-		scene = Set.fetch(to)
-		if prev == self.o.fetch("scene_active")["id"]:
+		active = self.SceneActive
+		viewing = Set.par.Current.eval()
+		scene = Set.Scenes.val[to]
+		if prev == self.SceneActive:
 			print("updating active")
-			self.o.store("scene_active", Set.fetch(to))
-		if prev == self.o.fetch("scene_viewing")["id"]:
-			print("updating viewing")
-			self.o.store("scene_viewing", Set.fetch(to))
-		return
-	def SyncToSet(self):
-		self.o.store("scene_active", Set.fetch(set.par.Current.val))
-		self.o.store("scene_viewing", Set.fetch(set.par.Current.val))
+			self.SceneActive = to
 		return
 	def DropFileInCell(self, cueIdx, trackNo, path):
 		# have to offset - 1... TODO: please standardize
 		print("drop file in cue {} track {}".format(cueIdx - 1, trackNo))
-		scene = json.loads(json.dumps(self.o.fetch('scene_viewing')))
+		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
 		track = scene['cues'][cueIdx - 1]['tracks'][trackNo]
 		track['type'] = 'file'
 		track['source'] = path
-		self.o.store('scene_viewing', scene)
+		#self.o.store('scene_viewing', scene)
 		Set.SaveScene(scene)
-		Set.LoadScene(scene['id'])
-		self.HardRefresh()
+		#Set.LoadScene(scene['id'])
+		#self.HardRefresh()
 		return
 	def DropTopInCell(self, cueIdx, trackNo, path):
 		# have to offset - 1... TODO: please standardize
 		print("drop TOP in cue {} track {}".format(cueIdx - 1, trackNo))
-		scene = json.loads(json.dumps(self.o.fetch('scene_viewing')))
+		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
 		track = scene['cues'][cueIdx - 1]['tracks'][trackNo]
 		prevPath = track['source']
 		track['type'] = 'file'
 		track['source'] = path
 
-		self.o.store('scene_viewing', scene)
+		#self.o.store('scene_viewing', scene)
 		Set.SaveScene(scene)
-		Set.LoadScene(scene['id'])
-		self.HardRefresh()
+		#Set.LoadScene(scene['id'])
+		#self.HardRefresh()
 
 		self.SetHistoryAction(
 			'UNDO',
