@@ -40,7 +40,6 @@ class LiveLauncher:
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
-		store.store('trackSrc'+str(idx), src)
 		return
 	def SetOpacities(self, cueIdx):
 		for t in ctrl_panels:
