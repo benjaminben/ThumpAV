@@ -19,5 +19,17 @@ class Main:
 				mainHeight = monHeight
 		self.owner.par.w = mainWidth
 		self.owner.par.h = mainHeight
+	def Resize(self):
+		uiWidth = self.owner.par.Uiresx
+		uiHeight = self.owner.par.Uiresy
+		finWidth = uiWidth
+		finHeight = uiHeight
+		masterWidth = self.owner.par.Masterres1
+		masterHeight = self.owner.par.Masterres2
+		finWidth += masterWidth
+		if masterHeight > uiHeight:
+			finHeight = masterHeight
+		self.owner.par.w = finWidth
+		self.owner.par.h = finHeight
 	def RebaseBank(self):
 		return
