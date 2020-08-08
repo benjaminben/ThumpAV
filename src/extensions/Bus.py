@@ -74,7 +74,12 @@ class BusClass:
 				self.o.op('preFx').outputConnectors[0].connect(fx_chain[i].inputConnectors[0])
 			else:
 				fx_chain[i-1].outputConnectors[0].connect(fx_chain[i].inputConnectors[0])
-				print('connected', fx_chain[i-1], 'to', fx_chain[i])
+				# print('connected', fx_chain[i-1], 'to', fx_chain[i])
 			i += 1
 			if (i == len(fx_chain)):
 				fx_chain[i-1].outputConnectors[0].connect(self.o.op('postFx'))
+	def ReorderFx(self, oId, nId):
+		chain = self.FxChain()
+		chain.insert(nId, chain.pop(oId))
+		self.o.store('fx_chain', chain)
+		self.RouteFx()
