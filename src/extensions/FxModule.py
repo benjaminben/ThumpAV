@@ -1,4 +1,4 @@
-class FxModule:
+class Plugin:
 	def __init__(self, owner):
 		self.owner = owner
 		return
@@ -12,6 +12,3 @@ class FxModule:
 		# Caller consumes dict of settings
 		options = {}
 		return options
-	def Kill(self):
-		parent.Bus.KillFx(self.owner)
-		return

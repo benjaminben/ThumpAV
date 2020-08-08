@@ -24,7 +24,7 @@ class BusClass:
 					break
 			popd = ptChain.pop(0)
 			if not node:
-				print('creating', popd['id'])
+				#print('creating', popd['id'])
 				node = self.o.copy(fxBin.op('{name}/{name}'.format(name=popd['id'])))
 				node.par.display = True
 				reroute = True
