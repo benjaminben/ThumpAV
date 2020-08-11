@@ -1,5 +1,7 @@
 Backup
-demo/dump/*.mov
+demo/dump/*
+!demo/dump/README.md
 *.*.toe
 CrashAutoSave.*.toe
 TouchDesignerCrash*
+site-packages/**/__pycache__
