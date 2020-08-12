@@ -1,7 +1,12 @@
 Backup
-demo/dump/*
-!demo/dump/README.md
 *.*.toe
 CrashAutoSave.*.toe
 TouchDesignerCrash*
 site-packages/**/__pycache__
+
+user/recordings/*
+!user/recordings/README.md
+user/plugins/*
+!user/plugins/README.md
+user/set/*
+!user/set/README.md
