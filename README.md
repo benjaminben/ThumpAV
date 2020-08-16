@@ -1,4 +1,4 @@
-# ThumpAV for TouchDesigner
+# ThumpAV <> TouchDesigner
 
 Open-source TD-based VJ / generative visuals rig. It intends to encourage improvosation while providing tools for continuous playback as a media server.
 
