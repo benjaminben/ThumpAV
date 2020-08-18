@@ -83,3 +83,6 @@ class BusClass:
 		chain.insert(nId, chain.pop(oId))
 		self.o.store('fx_chain', chain)
 		self.RouteFx()
+	def CopyFx(self, path):
+		print('COPYING', path)
+		return
