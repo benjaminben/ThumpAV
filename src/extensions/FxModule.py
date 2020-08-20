@@ -2,9 +2,6 @@ class Plugin:
 	def __init__(self, owner):
 		self.owner = owner
 		return
-	def Reset(self):
-		# Caller requires but that's it
-		return
 	def Load(self, options):
 		# Caller requires but that's it
 		return
