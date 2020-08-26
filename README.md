@@ -7,10 +7,14 @@ Thump is a free VJ studio / generative visuals rig, built in TouchDesigner. It i
 - Install latest version of [TouchDesigner](https://derivative.ca/) (free-license compatible) and open `app.toe`
 ![File explorer](https://i.imgur.com/MdNckUI.png)
 - Enter perform mode (`key=f1`) and visit the `settings` page to adjust resolution, audio inputs / outputs, recording preferences, and more.
-- *NB: TouchDesigner operates differently on Windows vs Mac. All core features of ThumpAV should function identically between platforms, but some plugins may require conversion
+- *NB: TouchDesigner operates differently on Windows vs Mac. All core features of ThumpAV should function identically between platforms, but some plugins may require conversion*
 
 ## How to use
 ![UI and stage layout](https://i.imgur.com/wKdergz.png)
+- On the left, your control station (this is what goes on your computer monitor)
+- On the right, final output (should overflow from your main monitor to cover your external monitor / projector)
+- Multi-monitor output coming soon
+
 ### Main UI
 ![Labelled UI area](https://i.imgur.com/34I5qbO.png)
 1. Track output monitoring area
@@ -44,8 +48,8 @@ Thump is a free VJ studio / generative visuals rig, built in TouchDesigner. It i
 10. Page up/down through scene cues
 
 ### Audio
-- Necessary to identify input for audio-reactive visualizations
-- Under settings tab, set the input/output device. Common setup involves [VB-Cable](https://www.vb-audio.com/Cable/) or [Soundflower](https://github.com/mattingalls/Soundflower/releases) as virtual input device and playing back out of physical device
+- For audio-reactive visualizations, necessary to specify input
+- Under Settings tab, set the input/output device. Common setup involves [VB-Cable](https://www.vb-audio.com/Cable/) or [Soundflower](https://github.com/mattingalls/Soundflower/releases) as virtual input device and playing back out of physical device
 
 ### Recording
 - Set up output (file name, FPS, codec, etc) under Settings tab
@@ -63,4 +67,4 @@ Thump is a free VJ studio / generative visuals rig, built in TouchDesigner. It i
 - Check out included plugins for guidance / inspiration :rocket:
 
 ## License
-- Consider this an extension of your current TouchDesigner license - use ThumpAV for commercial gigs or for funsies :)
+- Consider this an extension of your TouchDesigner license - use ThumpAV for commercial gigs or for funsies :)
