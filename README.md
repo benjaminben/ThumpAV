@@ -2,15 +2,16 @@
 
 Thump is a free VJ studio / generative visuals rig, built in TouchDesigner. It intends to encourage improvosation while providing tools for continuous streaming and playback as a media server.
 
-## Instructions
+## Installation
 - Download or clone this repository (clone recommended for updates)
 - Install latest version of [TouchDesigner](https://derivative.ca/) (free-license compatible) and open `app.toe`
 ![File explorer](https://i.imgur.com/MdNckUI.png)
 - Enter perform mode (`key=f1`) and visit the `settings` page to adjust resolution, audio inputs / outputs, recording preferences, and more.
+- *NB: TouchDesigner operates differently on Windows vs Mac. All core features of ThumpAV should function identically between platforms, but some plugins may require conversion
 
-# How to use
+## How to use
 ![UI and stage layout](https://i.imgur.com/wKdergz.png)
-## Main UI
+### Main UI
 ![Labelled UI area](https://i.imgur.com/34I5qbO.png)
 1. Track output monitoring area
     * a) Blue outline indicates track is hidden
@@ -42,19 +43,24 @@ Thump is a free VJ studio / generative visuals rig, built in TouchDesigner. It i
 9. Launch neighbor of active cue
 10. Page up/down through scene cues
 
-## Audio
+### Audio
 - Necessary to identify input for audio-reactive visualizations
 - Under settings tab, set the input/output device. Common setup involves [VB-Cable](https://www.vb-audio.com/Cable/) or [Soundflower](https://github.com/mattingalls/Soundflower/releases) as virtual input device and playing back out of physical device
 
-## Recording
-...
+### Recording
+- Set up output (file name, FPS, codec, etc) under Settings tab
+- Toggle `Record` switch under Settings tab to begin / end capture
+- New files will have UTC timestamp appended to their names to prevent overwrite
 
-## MIDI
+### MIDI
 - Custom mappings can be added through TouchDesigner [MIDI mapping workflow](https://www.youtube.com/watch?v=XLeghJmFBh0)
 - Templates located in `/local/midi/`. As of writing, Akai MPD218 is the sole mapping included in source. If you have a device mapping you'd like to contribute, please message / PR!
 
-## Plugins
+### Plugins
 - Detailed plugin creation guide coming soon
 - You can get started building your own VFX plugins by clicking "Create New" under the FX Bin tab
 - In principle, any TouchDesigner component can be turned into a plugin if it contains an In TOP, an Out TOP, and the boilerplate Plugin extension (can be modified for custom Saving, Loading, and other behavior)
 - Check out included plugins for guidance / inspiration :rocket:
+
+## License
+- Consider this an extension of your current TouchDesigner license - use ThumpAV for commercial gigs or for funsies :)
