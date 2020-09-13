@@ -12,13 +12,13 @@ class Writer:
 		return cue
 	def WriteOpacity(self, cue):
 		for i,t in enumerate(cue['tracks']):
-			t["opacity"] = Launcher.op('ctrl_panels/track{}/opacity/out1'.format(i))['cross'].eval()
+			t["opacity"] = Launcher.op('CTRL').pars(f'Opacity{i}')[0].eval()
 		return cue
 	def WriteSpeed(self, cue):
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
 				continue
-			t["speed"] = Launcher.op('ctrl_panels/track{}/speed/out1'.format(i))['cross'].eval()
+			t["speed"] = Launcher.op('CTRL').pars(f'Speed{i}')[0].eval()
 		return cue
 	def WriteOperand(self, cue):
 		cue["operand"] = Launcher.op('store').fetch('compOperand')
@@ -27,23 +27,23 @@ class Writer:
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
 				continue
-			t["volume"] = Launcher.op('ctrl_panels/track{}/volume/out1'.format(i))['cross'].eval()
+			t["volume"] = Launcher.op('CTRL').pars(f'Volume{i}')[0].eval()
 		return cue
 	def WriteBlind(self, cue):
 		for i,t in enumerate(cue['tracks']):
-			t["blind"] = Launcher.op('ctrl_panels/track{}/toggles/blind/out1'.format(i))['v1'].eval()
+			t["blind"] = 1 if Launcher.op('CTRL').pars(f'Blind{i}')[0].eval() else 0
 		return cue
 	def WriteMute(self, cue):
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
 				continue
-			t["mute"] = Launcher.op('ctrl_panels/track{}/toggles/mute/out1'.format(i))['v1'].eval()
+			t["mute"] = 1 if Launcher.op('CTRL').pars(f'Mute{i}')[0].eval() else 0
 		return cue
 	def WriteLoop(self, cue):
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
 				continue
-			t["loop"] = Launcher.op('ctrl_panels/track{}/toggles/loop/out1'.format(i))['v1'].eval()
+			t["loop"] = 1 if Launcher.op('CTRL').pars(f'Loop{i}')[0].eval() else 0
 		return cue
 	def WriteFx(self, cue):
 		for i,t in enumerate(cue['tracks']):

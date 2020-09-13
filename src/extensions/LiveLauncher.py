@@ -45,16 +45,17 @@ class LiveLauncher:
 		for t in ctrl_panels:
 			sel = 't{}'.format(t.digits)
 			v = opacityMap[cueIdx,sel]
-			t.op('opacity').panel.u.val = v
+			t.op('opacity').par.Value0 = v
 		return
 	def SetCtrl(self, cueIdx):
 		for t in ctrl_panels:
 			sel = "t{}".format(t.digits)
-			t.op('toggles/blind').panel.state.val = op("BlindMap")[cueIdx, sel]
+			# print(f'{sel} BLIND', op("BlindMap")[cueIdx, sel])
+			t.op('toggles/blind').par.Value0 = bool(op("BlindMap")[cueIdx, sel])
 			if (t.digits == 0): #if master, dip now
 				continue
-			t.op('toggles/mute').panel.state.val = op("MuteMap")[cueIdx, sel]
-			t.op('toggles/loop').panel.state.val = op("LoopMap")[cueIdx, sel]
+			t.op('toggles/mute').par.Value0 = op("MuteMap")[cueIdx, sel]
+			t.op('toggles/loop').par.Value0 = op("LoopMap")[cueIdx, sel]
 		return
 	def SetFx(self, cueIdx):
 		# have to offset - 1... TODO: please standardize
@@ -70,7 +71,7 @@ class LiveLauncher:
 			sel = 't{}'.format(tid)
 			v = volumeMap[cueIdx,sel]
 			default = 1 if tid == 0 else 0
-			s.panel.u.val = v or default
+			s.par.Value0 = v or default
 		return
 	def SetSpeeds(self, cueIdx):
 		for s in speedSliders:
@@ -78,7 +79,7 @@ class LiveLauncher:
 			sel = 't{}'.format(tid)
 			v = speedMap[cueIdx,sel]
 			default = 1 if tid == 0 else 0
-			s.panel.u.val = (v and ScaleRange(v,0,3,0,1)) or default
+			s.par.Value0 = v or default
 		return
 	def SetCue(self, idx):
 #		print("BEGIN SWITCH FRAME:", absTime.frame) 
@@ -123,8 +124,8 @@ class LiveLauncher:
 	def StageTrackFx(self, trackIdx):
 		for t in ctrl_panels:
 			e = t.op('toggles/fx')
-			if (e.panel.state == 1 and t.digits != trackIdx):
-				e.panel.state = 1
+			if (e.par.Value0 == 1 and t.digits != trackIdx):
+				e.par.Value0 = 1
 		return
 	def HandleSceneRename(self, prev, to):
 		active = self.SceneActive
