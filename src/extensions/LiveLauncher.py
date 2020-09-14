@@ -63,7 +63,13 @@ class LiveLauncher:
 			bus = self.o.op('bus{}'.format(i))
 			bus.FillFx(t["plugins"].getRaw())
 	def SetOperand(self, cueIdx):
-		store.store('compOperand', operandMap[cueIdx, 0].val)
+		for t in ctrl_panels:
+			if (t.digits == 0): #if master, dip now
+				continue
+			sel = "t{}".format(t.digits)
+			bus = self.o.op(f'bus{t.digits}')
+			print(op("OperandMap")[cueIdx, sel])
+			bus.par.Operand = op("OperandMap")[cueIdx, sel]
 		return
 	def SetVolumes(self, cueIdx):
 		for s in volumeSliders:
