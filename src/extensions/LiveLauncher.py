@@ -68,7 +68,6 @@ class LiveLauncher:
 				continue
 			sel = "t{}".format(t.digits)
 			bus = self.o.op(f'bus{t.digits}')
-			print(op("OperandMap")[cueIdx, sel])
 			bus.par.Operand = op("OperandMap")[cueIdx, sel]
 		return
 	def SetVolumes(self, cueIdx):
