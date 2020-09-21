@@ -127,10 +127,7 @@ class LiveLauncher:
 		#self.HardRefresh()
 		return
 	def StageTrackFx(self, trackIdx):
-		for t in ctrl_panels:
-			e = t.op('toggles/fx')
-			if (e.par.Value0 == 0 and t.digits != trackIdx):
-				e.par.Value0 = 1
+		self.o.op(f'ctrl_panels/track{trackIdx}/toggles/fx').par.Value0 = 1
 		return
 	def HandleSceneRename(self, prev, to):
 		active = self.SceneActive
