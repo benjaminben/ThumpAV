@@ -129,7 +129,7 @@ class LiveLauncher:
 	def StageTrackFx(self, trackIdx):
 		for t in ctrl_panels:
 			e = t.op('toggles/fx')
-			if (e.par.Value0 == 1 and t.digits != trackIdx):
+			if (e.par.Value0 == 0 and t.digits != trackIdx):
 				e.par.Value0 = 1
 		return
 	def HandleSceneRename(self, prev, to):
