@@ -24,8 +24,8 @@ class BusClass:
 					break
 			popd = ptChain.pop(0)
 			if not node:
-				#print('creating', popd['id'])
 				node = self.o.copy(fxBin.op('{name}/{name}'.format(name=popd['id'])))
+				node.allowCooking = True
 				node.par.display = True
 				reroute = True
 			node.Load(chain[len(nuChain)]['settings'])
@@ -57,6 +57,7 @@ class BusClass:
 			if (op(path).name == f.name):
 				return
 		newFx = self.o.copy(op(path))
+		newFx.allowCooking = True
 		newFx.par.display = True
 		fxArr.append(newFx)
 		self.o.store('fx_chain', fxArr)
