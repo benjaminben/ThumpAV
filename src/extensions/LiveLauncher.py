@@ -39,6 +39,7 @@ class LiveLauncher:
 		self.SceneActive = op(ipar.Set).par.Current.eval()
 		return
 	def SetSource(self, idx, src):
+		print(idx)
 		buses[idx-1].par.Source = src
 		return
 	def SetOpacities(self, cueIdx):
