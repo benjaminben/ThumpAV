@@ -1,9 +1,8 @@
 class Factory():
 	def __init__(self, owner):
 		return
-	def Cue(self, numTracks, options={'operand': ''}):
+	def Cue(self, numTracks):
 		cue = {
-			'operand': options['operand'],
 			'tracks': []
 		}
 		cue['tracks'].append(self.MasterTrack())
@@ -17,7 +16,7 @@ class Factory():
 			track[key] = options[key]
 		return track
 	def Track(self, options={}):
-		default = {'mute': 1, 'loop': 1, 'blind': 0, 'opacity': 1.0, 'volume': 1.0, 'speed': 1.0, 'type': None, 'source': '', 'plugins': [] }
+		default = {'mute': 1, 'operand': '', 'loop': 1, 'blind': 0, 'opacity': 1.0, 'volume': 1.0, 'speed': 1.0, 'type': None, 'source': '', 'plugins': [] }
 		track = default
 		for key in options:
 			track[key] = options[key]
