@@ -105,6 +105,14 @@ class LiveLauncher:
 		self.SetFx(idx)
 #		print("END SWITCH FRAME:", absTime.frame)
 		return
+	def NextCue(self):
+		s = store.fetch('cue')
+		if (s < sourceMap.numRows - 1):
+			self.SetCue(s+1)
+	def PrevCue(self):
+		s = store.fetch('cue')
+		if (s > 1):
+			self.SetCue(s-1)
 	def AddCue(self, idx):
 		# have to offset - 1... TODO: please standardize
 		print("add cue at idx {}".format(idx - 1))
