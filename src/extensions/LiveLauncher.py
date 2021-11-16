@@ -7,6 +7,8 @@ import time
 import dill as pickle
 import json
 
+import TDFunctions as TDF
+
 ScaleRange = mod.Helpers.ScaleRange
 
 Factory = op(ipar.Console).op('./Factory')
@@ -37,56 +39,59 @@ class LiveLauncher:
 	def __init__(self, owner):
 		self.o = owner
 		self.SceneActive = op(ipar.Set).par.Current.eval()
+		activeScenes = [self.SceneActive] if self.SceneActive else []
+		TDF.createProperty(self, "ActiveScenes", value=activeScenes, readOnly=False, dependable="deep")
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
 		return
-	def SetOpacities(self, cueIdx):
+	def SetOpacities(self, cue):
 		for t in ctrl_panels:
 			sel = 't{}'.format(t.digits)
-			v = opacityMap[cueIdx,sel]
+			v = cue['tracks'][t.digits]['opacity']
 			t.op('opacity').par.Value0 = v
 		return
-	def SetCtrl(self, cueIdx):
+	def SetCtrl(self, cue):
 		for t in ctrl_panels:
 			sel = "t{}".format(t.digits)
 			# print(f'{sel} BLIND', op("BlindMap")[cueIdx, sel])
-			t.op('toggles/blind').par.Value0 = bool(op("BlindMap")[cueIdx, sel])
+			t.op('toggles/blind').par.Value0 = bool(cue['tracks'][t.digits]['blind'])
 			if (t.digits == 0): #if master, dip now
 				continue
-			t.op('toggles/mute').par.Value0 = op("MuteMap")[cueIdx, sel]
-			t.op('toggles/loop').par.Value0 = op("LoopMap")[cueIdx, sel]
+			t.op('toggles/mute').par.Value0 = cue['tracks'][t.digits]['mute']
+			t.op('toggles/loop').par.Value0 = cue['tracks'][t.digits]['loop']
 		return
-	def SetFx(self, cueIdx):
+	def SetFx(self, cue):
 		# have to offset - 1... TODO: please standardize
-		for i,t in enumerate(Set.Scenes.val[Set.par.Current.eval()]["cues"][cueIdx - 1]["tracks"]):
+		for i,t in enumerate(cue["tracks"]):
 			bus = self.o.op('bus{}'.format(i))
 			bus.FillFx(t["plugins"].getRaw())
-	def SetOperand(self, cueIdx):
+	def SetOperand(self, cue):
 		for t in ctrl_panels:
 			if (t.digits == 0): #if master, dip now
 				continue
 			sel = "t{}".format(t.digits)
 			bus = self.o.op(f'bus{t.digits}')
-			bus.par.Operand = op("OperandMap")[cueIdx, sel]
+			bus.par.Operand = cue['tracks'][t.digits]['operand']
 		return
-	def SetVolumes(self, cueIdx):
+	def SetVolumes(self, cue):
 		for s in volumeSliders:
 			tid = s.parent().digits
 			sel = 't{}'.format(tid)
-			v = volumeMap[cueIdx,sel]
+			v = cue['tracks'][tid]['volume']
 			default = 1 if tid == 0 else 0
 			s.par.Value0 = v or default
 		return
-	def SetSpeeds(self, cueIdx):
+	def SetSpeeds(self, cue):
 		for s in speedSliders:
 			tid = s.parent().digits
 			sel = 't{}'.format(tid)
-			v = speedMap[cueIdx,sel]
+			v = cue['tracks'][tid]['speed']
 			default = 1 if tid == 0 else 0
 			s.par.Value0 = v or default
 		return
-	def SetCue(self, idx):
+	def SetCue(self, cue, idx, sceneId):
+		tracks = cue['tracks']
 #		print("BEGIN SWITCH FRAME:", absTime.frame) 
 		if Set.par.Current.eval() != self.SceneActive:
 			self.SceneActive = op(ipar.Set).par.Current.eval()
@@ -95,14 +100,14 @@ class LiveLauncher:
 			store.store('pageStart', 1)
 		else:
 			store.store('pageStart', idx - 2)
-		self.SetOpacities(idx)
-		self.SetOperand(idx)
-		self.SetVolumes(idx)
-		self.SetSpeeds(idx)
-		self.SetCtrl(idx)
-		for c in browser.ops('cue{}/cell*'.format(idx)):
-			self.SetSource(c.digits, str(c.op('bg').par.file))
-		self.SetFx(idx)
+		self.SetOpacities(cue)
+		self.SetOperand(cue)
+		self.SetVolumes(cue)
+		self.SetSpeeds(cue)
+		self.SetCtrl(cue)
+		for cidx in range(1, len(tracks) - 1):
+			self.SetSource(cidx, tracks[cidx]['source'])
+		self.SetFx(cue)
 #		print("END SWITCH FRAME:", absTime.frame)
 		return
 	def NextCue(self):
@@ -144,6 +149,8 @@ class LiveLauncher:
 		if prev == self.SceneActive:
 			print("updating active")
 			self.SceneActive = to
+		return
+	def DropCellInCell(self, cueIdx, trackNo, ref):
 		return
 	def DropFileInCell(self, cueIdx, trackNo, path):
 		# have to offset - 1... TODO: please standardize
