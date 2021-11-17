@@ -39,8 +39,13 @@ class LiveLauncher:
 	def __init__(self, owner):
 		self.o = owner
 		self.SceneActive = op(ipar.Set).par.Current.eval()
+		self.SceneRaw = op(ipar.Set).Scenes.val[self.SceneActive]
 		activeScenes = [self.SceneActive] if self.SceneActive else []
 		TDF.createProperty(self, "ActiveScenes", value=activeScenes, readOnly=False, dependable="deep")
+		return
+	def SetScene(self):
+		self.SceneActive = op(ipar.Set).par.Current.eval()
+		self.SceneRaw = op(ipar.Set).Scenes.val[self.SceneActive]
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
@@ -94,12 +99,12 @@ class LiveLauncher:
 		tracks = cue['tracks']
 #		print("BEGIN SWITCH FRAME:", absTime.frame) 
 		if Set.par.Current.eval() != self.SceneActive:
-			self.SceneActive = op(ipar.Set).par.Current.eval()
+			self.SetScene()
 		store.store('cue', idx)
 		if idx <= 2:
 			store.store('pageStart', 1)
 		else:
-			store.store('pageStart', idx - 2)
+			store.store('pageStart', idx - 1)
 		self.SetOpacities(cue)
 		self.SetOperand(cue)
 		self.SetVolumes(cue)
@@ -112,12 +117,14 @@ class LiveLauncher:
 		return
 	def NextCue(self):
 		s = store.fetch('cue')
-		if (s < sourceMap.numRows - 1):
-			self.SetCue(s+1)
+		to = s+1
+		if (s < len(self.SceneRaw['cues']) - 1):
+			self.SetCue(self.SceneRaw['cues'][to], to, self.SceneActive)
 	def PrevCue(self):
 		s = store.fetch('cue')
-		if (s > 1):
-			self.SetCue(s-1)
+		to = s-1
+		if (s > 0):
+			self.SetCue(self.SceneRaw['cues'][to], to, self.SceneActive)
 	def AddCue(self, idx):
 		# have to offset - 1... TODO: please standardize
 		print("add cue at idx {}".format(idx - 1))
