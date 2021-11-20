@@ -11,19 +11,8 @@ import TDFunctions as TDF
 
 ScaleRange = mod.Helpers.ScaleRange
 
-Factory = op(ipar.Console).op('./Factory')
-Set = op(ipar.Set)
-
 store = op('store')
 
-sourceMap = op('SourceMap')
-blindMap = op('BlindMap')
-muteMap = op('MuteMap')
-loopMap = op('LoopMap')
-operandMap = op('OperandMap')
-opacityMap = op('OpacityMap')
-volumeMap = op('VolumeMap')
-speedMap = op('SpeedMap')
 ctrl_panels = ops('ctrl_panels/track*')
 buses = ops('bus[1-4]')
 browser = op('browser')
@@ -40,12 +29,7 @@ class LiveLauncher:
 		self.o = owner
 		self.SceneActive = op(ipar.Set).par.Current.eval()
 		self.SceneRaw = op(ipar.Set).Scenes.val[self.SceneActive]
-		activeScenes = [self.SceneActive] if self.SceneActive else []
-		TDF.createProperty(self, "ActiveScenes", value=activeScenes, readOnly=False, dependable="deep")
-		return
-	def SetScene(self):
-		self.SceneActive = op(ipar.Set).par.Current.eval()
-		self.SceneRaw = op(ipar.Set).Scenes.val[self.SceneActive]
+		self.ActiveBrowser = None
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
@@ -59,7 +43,6 @@ class LiveLauncher:
 	def SetCtrl(self, cue):
 		for t in ctrl_panels:
 			sel = "t{}".format(t.digits)
-			# print(f'{sel} BLIND', op("BlindMap")[cueIdx, sel])
 			t.op('toggles/blind').par.Value0 = bool(cue['tracks'][t.digits]['blind'])
 			if (t.digits == 0): #if master, dip now
 				continue
@@ -95,101 +78,22 @@ class LiveLauncher:
 			default = 1 if tid == 0 else 0
 			s.par.Value0 = v or default
 		return
-	def SetCue(self, cue, idx, sceneId):
+	def SetCue(self, cue, browser):
 		tracks = cue['tracks']
 #		print("BEGIN SWITCH FRAME:", absTime.frame) 
-		if Set.par.Current.eval() != self.SceneActive:
-			self.SetScene()
-		store.store('cue', idx)
-		if idx <= 2:
-			store.store('pageStart', 1)
-		else:
-			store.store('pageStart', idx - 1)
+		self.ActiveBrowser = browser
 		self.SetOpacities(cue)
 		self.SetOperand(cue)
 		self.SetVolumes(cue)
 		self.SetSpeeds(cue)
 		self.SetCtrl(cue)
-		for cidx in range(1, len(tracks) - 1):
+		for cidx in range(1, len(tracks)):
 			self.SetSource(cidx, tracks[cidx]['source'])
 		self.SetFx(cue)
 #		print("END SWITCH FRAME:", absTime.frame)
 		return
-	def NextCue(self):
-		s = store.fetch('cue')
-		to = s+1
-		if (s < len(self.SceneRaw['cues']) - 1):
-			self.SetCue(self.SceneRaw['cues'][to], to, self.SceneActive)
-	def PrevCue(self):
-		s = store.fetch('cue')
-		to = s-1
-		if (s > 0):
-			self.SetCue(self.SceneRaw['cues'][to], to, self.SceneActive)
-	def AddCue(self, idx):
-		# have to offset - 1... TODO: please standardize
-		print("add cue at idx {}".format(idx - 1))
-		new = Factory.Cue(numTracks=ext.Helpers.CalcNumTracks() - 1) # offset tracks for master holy shi*t
-		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
-		scene["cues"].insert(idx - 1, new)
-		#self.o.store('scene_viewing', scene)
-		Set.SaveScene(scene)
-		if idx <= store.fetch('cue'):
-			store.store('cue', idx + 1)
-		#self.HardRefresh()
-		return
-	def DeleteCue(self, idx):
-		# have to offset - 1... TODO: please standardize
-		# BUG?: Should store cue idx as None if current scene deleted? Otherwise save before next launch will yield buggy behavior
-		print("delete cue at idx {}".format(idx - 1))
-		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
-		scene["cues"].pop(idx - 1)
-		Set.SaveScene(scene)
-		#self.HardRefresh()
-		return
 	def StageTrackFx(self, trackIdx):
 		self.o.op(f'ctrl_panels/track{trackIdx}/toggles/fx').par.Value0 = 1
-		return
-	def HandleSceneRename(self, prev, to):
-		active = self.SceneActive
-		viewing = Set.par.Current.eval()
-		scene = Set.Scenes.val[to]
-		if prev == self.SceneActive:
-			print("updating active")
-			self.SceneActive = to
-		return
-	def DropCellInCell(self, cueIdx, trackNo, ref):
-		return
-	def DropFileInCell(self, cueIdx, trackNo, path):
-		# have to offset - 1... TODO: please standardize
-		print("drop file in cue {} track {}".format(cueIdx - 1, trackNo))
-		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
-		track = scene['cues'][cueIdx - 1]['tracks'][trackNo]
-		track['type'] = 'file'
-		track['source'] = path
-		#self.o.store('scene_viewing', scene)
-		Set.SaveScene(scene)
-		#Set.LoadScene(scene['id'])
-		#self.HardRefresh()
-		return
-	def DropTopInCell(self, cueIdx, trackNo, path):
-		# have to offset - 1... TODO: please standardize
-		print("drop TOP in cue {} track {}".format(cueIdx - 1, trackNo))
-		scene = Set.Scenes.val[Set.par.Current.eval()].getRaw()
-		track = scene['cues'][cueIdx - 1]['tracks'][trackNo]
-		prevPath = track['source']
-		track['type'] = 'file'
-		track['source'] = path
-
-		#self.o.store('scene_viewing', scene)
-		Set.SaveScene(scene)
-		#Set.LoadScene(scene['id'])
-		#self.HardRefresh()
-
-		self.SetHistoryAction(
-			'UNDO',
-			lambda: self.DropTopInCell(cueIdx, trackNo, prevPath), # SAME cueIdx as OG PASSED
-			'cue {}, Cell: {}: {}'.format(cueIdx, trackNo, path)
-		)
 		return
 	def SetHistoryAction(self, key, action, label):
 		history.store(key, {'action': pickle.dumps(action), 'label': label})
