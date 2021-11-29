@@ -104,3 +104,7 @@ class Browser:
 			if len(cue["tracks"]) > numTracks:
 				numTracks = len(cue["tracks"])
 		return numTracks
+	def SaveCue(self):
+		cid = self.owner.par.Latestcue.eval()
+		scene = op(ipar.Set).Scenes.val[self.owner.par.Scene.eval()].getRaw()
+		op(ipar.Writer).WriteCue(scene, cid)

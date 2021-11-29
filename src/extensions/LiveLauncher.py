@@ -27,8 +27,6 @@ buses.append(op('bus0'))
 class LiveLauncher:
 	def __init__(self, owner):
 		self.o = owner
-		self.SceneActive = op(ipar.Set).par.Current.eval()
-		self.SceneRaw = op(ipar.Set).Scenes.val[self.SceneActive]
 		self.ActiveBrowser = None
 		return
 	def SetSource(self, idx, src):
