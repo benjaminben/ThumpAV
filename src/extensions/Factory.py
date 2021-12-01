@@ -21,6 +21,6 @@ class Factory():
 		for key in options:
 			track[key] = options[key]
 		return track
-	def Scene(self, sid, numTracks=4):
-		scene = {'id': sid, 'cues': [self.Cue(numTracks)]}
+	def Scene(self, sid, numTracks=4, empty=False):
+		scene = {'id': sid, 'cues': [] if empty else [self.Cue(numTracks)]}
 		return scene

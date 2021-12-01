@@ -7,6 +7,7 @@ class Set:
 	def __init__(self, owner):
 		self.owner = owner
 		TDF.createProperty(self, "Scenes", value={}, readOnly=False, dependable="deep")
+		self.Scenes['__EMPTY__'] = op(ipar.Console).op('Factory').Scene('__EMPTY__')
 		self.LoadAll()
 		return
 	def LoadAll(self):
