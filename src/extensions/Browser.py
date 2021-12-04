@@ -65,6 +65,7 @@ class Browser:
 		return
 	def DropFileInCell(self, cueIdx, trackNo, path):
 		# have to offset - 1... TODO: please standardize
+		print("FILE DROP??", path)
 		print("drop file in cue {} track {}".format(cueIdx - 1, trackNo))
 		scene = self.owner.par.Data.eval().getRaw()
 		track = scene['cues'][cueIdx - 1]['tracks'][trackNo]

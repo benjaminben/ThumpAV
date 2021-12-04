@@ -33,10 +33,10 @@ class BusClass:
 		if len(fxChain):
 			while len(fxChain):
 				f = fxChain.pop(len(fxChain) - 1)
-				print('destroy', f.name)
+				#print('destroy', f.name)
 				f.destroy()
 		if reroute:
-			print('rerouting')
+			#print('rerouting')
 			self.o.store('fx_chain', nuChain)
 			self.RouteFx()
 		return
@@ -85,5 +85,5 @@ class BusClass:
 		self.o.store('fx_chain', chain)
 		self.RouteFx()
 	def CopyFx(self, path):
-		print('COPYING', path)
+		#print('COPYING', path)
 		return

@@ -90,6 +90,12 @@ class LiveLauncher:
 		self.SetFx(cue)
 #		print("END SWITCH FRAME:", absTime.frame)
 		return
+	def SetLayer(self, trackIdx, data):
+		bus = self.o.op('bus{}'.format(trackIdx))
+		self.SetSource(trackIdx, data['source'])
+		bus.FillFx(data['plugins'].getRaw())
+		print(data, track)
+		return
 	def StageTrackFx(self, trackIdx):
 		self.o.op(f'ctrl_panels/track{trackIdx}/toggles/fx').par.Value0 = 1
 		return
