@@ -91,9 +91,10 @@ class LiveLauncher:
 #		print("END SWITCH FRAME:", absTime.frame)
 		return
 	def SetLayer(self, trackIdx, data):
-		bus = self.o.op('bus{}'.format(trackIdx))
 		self.SetSource(trackIdx, data['source'])
+		bus = self.o.op('bus{}'.format(trackIdx))
 		bus.FillFx(data['plugins'].getRaw())
+		bus.par.Operand = data['operand']
 		print(data, track)
 		return
 	def StageTrackFx(self, trackIdx):
