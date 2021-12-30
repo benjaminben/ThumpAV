@@ -54,7 +54,7 @@ class Writer:
 			base = []
 			chain = Launcher.op('bus{}'.format(i)).FxChain()
 			for f in chain:
-				base.append({'id': f.name, 'settings': f.Save()})
+				base.append({'id': f.par.Name.eval(), 'settings': f.Save()})
 			t["plugins"] = base
 		return cue
 	def WriteCue(self, scene, cid):

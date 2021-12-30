@@ -1,5 +1,5 @@
 fxBin = op(ipar.Console).op('fx_bin')
-
+pluginsMap = op(ipar.Console).op('fx_bin/pluginsMap')
 class BusClass:
 	def __init__(self, owner):
 		self.o = owner
@@ -17,14 +17,14 @@ class BusClass:
 		while len(ptChain):
 			node = False
 			for i,f in enumerate(fxChain):
-				if f.name == ptChain[0]["id"]:
+				if f.par.Name == ptChain[0]["id"]:
 					node = fxChain.pop(i)
 					if i: # confirm if we've gone farther than 0 (recycle f but new order)
 						reroute = True
 					break
 			popd = ptChain.pop(0)
 			if not node:
-				node = self.o.copy(fxBin.op('{name}/{name}'.format(name=popd['id'])))
+				node = self.o.copy(op(pluginsMap[popd["id"], 1]))
 				node.allowCooking = True
 				node.par.display = True
 				reroute = True
@@ -51,15 +51,18 @@ class BusClass:
 		self.o.store('fx_chain', a)
 		fx.destroy()
 		self.RouteFx()
-	def SpawnFx(self, path):
+	def SpawnFx(self, path, position=-1):
 		fxArr = self.FxChain()
-		for f in fxArr:
-			if (op(path).name == f.name):
-				return
+		# for f in fxArr:
+		# 	if (op(path).par.Name == f.par.Name):
+		# 		return
 		newFx = self.o.copy(op(path))
 		newFx.allowCooking = True
 		newFx.par.display = True
-		fxArr.append(newFx)
+		if position > -1:
+			fxArr.insert(position, newFx)
+		else:
+			fxArr.append(newFx)
 		self.o.store('fx_chain', fxArr)
 		self.RouteFx()
 	def RouteFx(self):
