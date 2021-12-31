@@ -24,7 +24,6 @@ class Writer:
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
 				continue
-			print(Launcher.op(f'bus{i}').par.Operand.eval())
 			t["operand"] = Launcher.op(f'bus{i}').par.Operand.eval()
 		return cue
 	def WriteVolume(self, cue):
