@@ -24,10 +24,12 @@ history = op('history')
 
 buses.append(op('bus0'))
 
+Playback = op('Playback')
+
 class LiveLauncher:
 	def __init__(self, owner):
 		self.o = owner
-		self.ActiveBrowser = None
+		self.ActiveBrowser = Playback.op(Playback.par.Active.eval())
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
