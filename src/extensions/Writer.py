@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 Launcher = op(ipar.LiveLauncher)
 
 class Writer:
@@ -70,8 +72,13 @@ class Writer:
 		scene["cues"][cid] = cue
 		op(ipar.Set).SaveScene(scene)
 		return
-	def NewScene(self, sid):
+	def NewScene(self, path):
+		sid = Path(path).stem
 		scene = op(ipar.Console).op('Factory').Scene(sid)
-		op(ipar.Set).SaveScene(scene)
-		run('op(ipar.Set).LoadScene("{}")'.format(sid), delayFrames = 1)
+		# op(ipar.Set).SaveScene(scene, path=path)
+		#op(ipar.Set).op('source/folder1').par.refresh.pulse()
+		# run('op(ipar.Set).LoadScene("{}")'.format(sid), delayFrames = 1)
+		with open(path, "w") as outfile:
+			json.dump(scene, outfile)
+		op(ipar.Set).Scenes[sid] = scene
 		return
