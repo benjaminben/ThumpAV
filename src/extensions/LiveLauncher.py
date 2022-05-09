@@ -29,7 +29,7 @@ Playback = op('Playback')
 class LiveLauncher:
 	def __init__(self, owner):
 		self.o = owner
-		self.ActiveBrowser = Playback.op(Playback.par.Active.eval())
+		self.o.store("ActiveBrowser", Playback.ActiveBrowser())
 		return
 	def SetSource(self, idx, src):
 		buses[idx-1].par.Source = src
@@ -80,8 +80,8 @@ class LiveLauncher:
 		return
 	def SetCue(self, cue, browser):
 		tracks = cue['tracks']
-#		print("BEGIN SWITCH FRAME:", absTime.frame) 
-		self.ActiveBrowser = browser
+#		print("BEGIN SWITCH FRAME:", absTime.frame)
+		self.o.store("ActiveBrowser", browser)
 		self.SetOpacities(cue)
 		self.SetOperand(cue)
 		self.SetVolumes(cue)

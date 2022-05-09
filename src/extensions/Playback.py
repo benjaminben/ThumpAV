@@ -9,6 +9,12 @@ class Playback:
 			if s.par.Scene.eval() == sid:
 				idx = i
 		return idx
+	def ActiveBrowser(self):
+		scenes = self.Scenes()
+		for i,s in enumerate(scenes):
+			if s.par.Scene.eval() == self.owner.par.Active.eval():
+				return s
+		return None
 	def Scenes(self):
 		return self.owner.fetch('scenes', [])
 	def SwitchScene(self, sid):
