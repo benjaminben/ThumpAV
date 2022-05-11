@@ -46,6 +46,15 @@ class Playback:
 		op = None
 		scenes = self.Scenes()[:]
 		destTab = 0
+		# if len(scenes) < 1:
+		# 	return
+		# elif len(self.Scenes()[:]) == 1:
+		# 	op = scenes.pop(0)
+		# 	self.owner.store('scenes', scenes)
+		# 	self.owner.op('tabs').par.Value0 = 0
+		# 	self.owner.par.Active = ''
+		# 	op.destroy()
+		# 	return
 		if len(scenes) <= 1:
 			return
 		for i,s in enumerate(scenes):

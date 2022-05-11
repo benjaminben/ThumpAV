@@ -10,3 +10,5 @@ user/plugins/*
 !user/plugins/README.md
 user/set/*
 !user/set/README.md
+
+.env.local
