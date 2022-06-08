@@ -14,6 +14,7 @@ def onHoverStartGetAccept(comp, info):
 		True if comp can receive dragItems
 	"""
 	#debug('\nonHoverStartGetAccept comp:', comp.path, '- info:\n', info)
+
 	try:
 		if len(info['dragItems']) != 1:
 			return False
