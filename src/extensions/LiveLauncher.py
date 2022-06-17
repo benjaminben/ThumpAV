@@ -76,7 +76,7 @@ class LiveLauncher:
 			sel = 't{}'.format(tid)
 			v = cue['tracks'][tid]['speed']
 			default = 1 if tid == 0 else 0
-			s.par.Value0 = v or default
+			s.par.value0 = v or default
 		return
 	def SetCue(self, cue, browser):
 		tracks = cue['tracks']
