@@ -109,3 +109,22 @@ class Browser:
 		cid = self.owner.par.Latestcue.eval()
 		scene = op(ipar.Set).Scenes.val[self.owner.par.Scene.eval()].getRaw()
 		op(ipar.Writer).WriteCue(scene, cid)
+	def NewCue(self):
+		scene = self.owner.par.Data.eval()
+		cue = op.Factory.Cue(numTracks=self.CalcNumTracks() - 1)
+		newIdx = op.Writer.AppendCue(scene.getRaw(), cue)
+		self.owner.par.Latestcue = newIdx
+		# run(f"op('{self.owner.path}').SendCue({newCue}, {newIdx})", delayFrames=1)
+	def MoveCue(self, cueIdx, newIdx):
+		if newIdx < 0:
+			return
+		scene = self.owner.par.Data.eval().getRaw()
+		cue = scene['cues'].pop(cueIdx)
+		scene['cues'].insert(newIdx, cue)
+		Set.SaveScene(scene)
+		
+		latest = self.owner.par.Latestcue.eval()
+		if latest == cueIdx:
+			self.owner.par.Latestcue = newIdx
+		elif latest == newIdx:
+			self.owner.par.Latestcue = latest + 1

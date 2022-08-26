@@ -6,6 +6,16 @@ class Writer:
 	def __init__(self, owner):
 		self.owner = owner
 		return
+	def hydrateCueFromCurrentState(self, cue):
+		self.WriteSource(cue)
+		self.WriteOpacity(cue)
+		self.WriteOperand(cue)
+		self.WriteVolume(cue)
+		self.WriteSpeed(cue)
+		self.WriteBlind(cue)
+		self.WriteMute(cue)
+		self.WriteLoop(cue)
+		self.WriteFx(cue)
 	def WriteSource(self, cue):
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
@@ -60,15 +70,7 @@ class Writer:
 		return cue
 	def WriteCue(self, scene, cid):
 		cue = scene["cues"][cid]
-		self.WriteSource(cue)
-		self.WriteOpacity(cue)
-		self.WriteOperand(cue)
-		self.WriteVolume(cue)
-		self.WriteSpeed(cue)
-		self.WriteBlind(cue)
-		self.WriteMute(cue)
-		self.WriteLoop(cue)
-		self.WriteFx(cue)
+		self.hydrateCueFromCurrentState(cue)
 		scene["cues"][cid] = cue
 		op(ipar.Set).SaveScene(scene)
 		return
@@ -82,3 +84,8 @@ class Writer:
 			json.dump(scene, outfile)
 		op(ipar.Set).Scenes[sid] = scene
 		return
+	def AppendCue(self, scene, cue):
+		self.hydrateCueFromCurrentState(cue)
+		scene['cues'].append(cue)
+		op(ipar.Set).SaveScene(scene)
+		return len(scene['cues'])
