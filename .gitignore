@@ -12,3 +12,5 @@ user/set/*
 !user/set/README.md
 
 .env.local
+
+.DS_Store
