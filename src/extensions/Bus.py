@@ -1,8 +1,12 @@
+from TDStoreTools import DependList, DependDict
+
 fxBin = op(ipar.Console).op('fx_bin')
 pluginsMap = op(ipar.Console).op('fx_bin/pluginsMap')
 class BusClass:
 	def __init__(self, owner):
 		self.o = owner
+		self.SelectStage = DependDict({})
+		print(self.SelectStage)
 	def Boop(self, s):
 		print(s)
 	def FxChain(self):
