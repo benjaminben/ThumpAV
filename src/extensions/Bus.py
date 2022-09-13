@@ -107,3 +107,14 @@ class BusClass:
 			return
 		preset = list(map(lambda p: { "id": p.par.Name.eval(), "settings": p.Save() }, seq))
 		op.FxBin.SavePreset(preset)
+	def LoadPreset(self, preset):
+		nuChain = self.FxChain()[:]
+		for p in preset:
+			id = p["id"]
+			node = self.o.copy(op(pluginsMap[id, 1]))
+			node.allowCooking = True
+			node.par.display = True
+			node.Load(p["settings"])
+			nuChain.append(node)
+		self.o.store("fx_chain", nuChain)
+		self.RouteFx()

@@ -1,15 +1,22 @@
-# callbacks for when associated Panel is being dropped on
+
+import json
 
 def onHoverStartGetAccept(comp, info):
-	if not len(info['dragItems']):
-		return False
-	valid = False
-	label = info['dragItems'][0]
-	if (label and type(label) == str and
-    (label == 'PLUGIN' or label == 'PLUGIN_GROUP')):
-		valid = True
-	return valid # accept what is being dragged
-	
+	"""
+	Called when comp needs to know if dragItems are acceptable as a drop.
+
+	Args:
+		comp: the panel component being hovered over
+		info: A dictionary containing all info about hover, including:
+			dragItems: a list of objects being dragged over comp
+			callbackPanel: the panel Component pointing to this callback DAT
+
+	Returns:
+		True if comp can receive dragItems
+	"""
+	#debug('\nonHoverStartGetAccept comp:', comp.path, '- info:\n', info)
+	return True # accept what is being dragged
+
 def onHoverEnd(comp, info):
 	"""
 	Called when dragItems leave comp's hover area.
@@ -34,34 +41,13 @@ def onDropGetResults(comp, info):
 			callbackPanel: the panel Component pointing to this callback DAT
 
 	Returns:
-		 dictionary of results with descriptive keys. Some possibilities:
+		A dictionary of results with descriptive keys. Some possibilities:
 			'droppedOn': the object receiving the drop
 			'createdOPs': list of created ops in order of drag items
 			'dropChoice': drop menu choice selected
 			'modified': object modified by drop
 	"""
-	action = info['dragItems'][0]
-	payload = info['dragItems'][1]
-	chain = comp.parent.Bus.fetch("fx_chain", None)
-	if (chain):
-		myIdx = chain.index(comp.parent.Wrapper)
-		if action == 'PLUGIN':
-			srcComp = payload
-			if srcComp.parent.Bus == comp.parent.Bus:
-				draggedIdx = chain.index(srcComp)
-				comp.parent.Bus.ReorderFx(draggedIdx, myIdx)
-			else:
-				comp.parent.Bus.SpawnFx(srcComp, myIdx)
-		elif action == 'PLUGIN_GROUP':
-			plugins = payload
-			for p in plugins:
-				if p.parent.Bus == comp.parent.Bus:
-					destIdx = chain.index(comp.parent.Wrapper)
-					draggedIdx = chain.index(p)
-					comp.parent.Bus.ReorderFx(draggedIdx, destIdx)
-				else:
-					comp.parent.Bus.SpawnFx(p, myIdx)
-	op.LiveLauncher.par.Showfxcopyarea = False
+	debug('\nonDropGetResults comp:', comp.path, '- info:\n', info)
 	return {'droppedOn': comp}
 
 # callbacks for when associated Panel is being dragged
@@ -78,14 +64,10 @@ def onDragStartGetItems(comp, info):
 	Returns:
 		A list of dragItems: [object1, object2, ...]
 	"""
-	staged = comp.parent.Bus.SelectStage
-	sequence = sorted(staged, key=lambda item: staged[item]) # source index is key's value
-	plugins = [None] * len(sequence)
-	for idx, path in enumerate(sequence):
-		plugins[idx] = op(path)
-	dragItems = ['PLUGIN_GROUP', plugins]
+	preset = json.loads(comp.op('preset').text)
+	dragItems = ['PLUGIN_PRESET', preset] # drag the comp itself
+	op.LiveLauncher.par.Showfxdroparea = True
 	#debug('\nonDragStartGetItems comp:', comp.path, '- info:\n', info)
-	op(ipar.LiveLauncher).par.Showfxcopyarea = True
 	return dragItems
 
 def onDragEnd(comp, info):
@@ -101,5 +83,6 @@ def onDragEnd(comp, info):
 			dragItems: the original dragItems for the drag
 			callbackPanel: the panel Component pointing to this callback DAT
 	"""
+	op.LiveLauncher.par.Showfxdroparea = False
 	#debug('\nonDragEnd comp:', comp.path, '- info:\n', info)
 	
