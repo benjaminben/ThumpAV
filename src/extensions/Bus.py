@@ -94,3 +94,16 @@ class BusClass:
 	def CopyFx(self, path):
 		#print('COPYING', path)
 		return
+	def SelectionSequence(self):
+		staged = self.SelectStage
+		sequence = sorted(staged, key=lambda item: staged[item]) # source index is key's value
+		plugins = [None] * len(sequence)
+		for idx, path in enumerate(sequence):
+			plugins[idx] = op(path)
+		return plugins
+	def SelectionToPreset(self):
+		seq = self.SelectionSequence()
+		if not len(seq):
+			return
+		preset = list(map(lambda p: { "id": p.par.Name.eval(), "settings": p.Save() }, seq))
+		op.FxBin.SavePreset(preset)
