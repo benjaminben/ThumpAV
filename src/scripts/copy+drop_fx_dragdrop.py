@@ -9,13 +9,15 @@ def onHoverStartGetAccept(comp, info):
 		return False
 
 def onDropGetResults(comp, info):
+	print("HELLO", comp, info)
+	bus = op(comp.parent().par.Bus)
 	dragItems = info['dragItems']
 	if dragItems[0] == 'PLUGIN_PRESET':
-		op(parent().par.Bus).LoadPreset(dragItems[1])
+		bus.LoadPreset(dragItems[1])
 	else:
 		# expects sorted plugins
 		plugins = dragItems[1]
 		for p in plugins:
 			if p:
-				op(parent().par.Bus).SpawnFx(p)
+				bus.SpawnFx(p)
 	return {'comp': comp, 'received':dragItems}
