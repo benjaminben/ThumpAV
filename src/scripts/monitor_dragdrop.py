@@ -63,6 +63,8 @@ def onDropGetResults(comp, info):
 			ext.LiveLauncher.SetSource(parent().digits, first['src'])
 		if 'cell' in first:
 			ext.LiveLauncher.SetLayer(parent().digits, first['cell'])
+		if 'top' in first:
+			ext.LiveLauncher.SetSelect(parent().digits, first['top'])
 	except:
 		return False
 	return {'droppedOn': comp}

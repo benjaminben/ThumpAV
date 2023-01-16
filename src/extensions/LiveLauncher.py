@@ -32,7 +32,14 @@ class LiveLauncher:
 		self.o.store("ActiveBrowser", Playback.ActiveBrowser())
 		return
 	def SetSource(self, idx, src):
-		buses[idx-1].par.Source = src
+		bus = buses[idx-1]
+		bus.par.Source = src
+		bus.par.Sourcetype = 'file'
+		return
+	def SetSelect(self, idx, src):
+		bus = buses[idx-1]
+		bus.par.Sourceselect = src
+		bus.par.Sourcetype = 'select'
 		return
 	def SetOpacities(self, cue):
 		for t in ctrl_panels:
