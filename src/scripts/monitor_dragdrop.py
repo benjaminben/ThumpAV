@@ -83,7 +83,7 @@ def onDragStartGetItems(comp, info):
 	Returns:
 		A list of dragItems: [object1, object2, ...]
 	"""
-	dragItems = [comp] # drag the comp itself
+	dragItems = [{'top': parent.Monitor.par.Bus.eval().op('fin')}] # drag the comp itself
 	#debug('\nonDragStartGetItems comp:', comp.path, '- info:\n', info)
 	return dragItems
 
