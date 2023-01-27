@@ -1,7 +1,10 @@
+import TDFunctions as TDF
+
 class Playback:
 	def __init__(self, owner):
 		self.owner = owner
 		self.owner.store('scenes', self.owner.fetch('scenes', []))
+		TDF.createProperty(self, 'CurrentView', value=self.ActiveBrowser(), dependable=True, readOnly=False)
 	def indexBySid(self, sid):
 		idx = -1
 		scenes = self.Scenes()
@@ -10,6 +13,12 @@ class Playback:
 				idx = i
 		return idx
 	def ActiveBrowser(self):
+		scenes = self.Scenes()
+		for i,s in enumerate(scenes):
+			if s.par.Scene.eval() == self.owner.par.Active.eval():
+				return s
+		return None
+	def GetBrowserByScene(self, sid):
 		scenes = self.Scenes()
 		for i,s in enumerate(scenes):
 			if s.par.Scene.eval() == self.owner.par.Active.eval():
