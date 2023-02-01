@@ -54,7 +54,7 @@ def onDropGetResults(comp, info):
 	"""
 	
 	first = info['dragItems'][0]
-
+	
 	try:
 		if type(first) == tdu.FileInfo:
 			ext.LiveLauncher.SetSource(parent().digits, first.path)
