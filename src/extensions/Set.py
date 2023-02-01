@@ -27,6 +27,12 @@ class Set:
 		# 	s['id'] = scene
 		# 	with open(path, "w") as outfile:
 		# 		json.dump(s, outfile)
+		if project.saveOsName == "macOS":
+			for cue in s['cues']:
+				for track in cue['tracks']:
+					source = track.get('source')
+					if source:
+						track['source'] = source.replace('F:/bank', '/Volumes/Extreme SSD/bank')
 		self.Scenes.val[scene] = s
 		self.owner.store(scene, s)
 	def Unload(self, scene):
