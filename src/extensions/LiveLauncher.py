@@ -42,10 +42,13 @@ class LiveLauncher:
 		bus.par.Sourcetype = 'select'
 		return
 	def SetOpacities(self, cue):
+		# for (i,p) in enumerate(self.o.op('CTRL').pars(f'Opacity*')):
+		# 	v = cue['tracks'][i]['opacity']
+		# 	p = v
 		for t in ctrl_panels:
 			sel = 't{}'.format(t.digits)
 			v = cue['tracks'][t.digits]['opacity']
-			t.op('opacity').par.Value0 = v
+			t.op('opacity').par.value0 = v 
 		return
 	def SetCtrl(self, cue):
 		for t in ctrl_panels:
