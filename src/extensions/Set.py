@@ -27,12 +27,12 @@ class Set:
 		# 	s['id'] = scene
 		# 	with open(path, "w") as outfile:
 		# 		json.dump(s, outfile)
-		if project.saveOsName == "macOS":
-			for cue in s['cues']:
-				for track in cue['tracks']:
-					source = track.get('source')
-					if source:
-						track['source'] = source.replace('F:/bank', '/Volumes/Extreme SSD/bank')
+		if op.main.par.Replaceprefix.eval():
+			s = self.ReplaceScenePathPrefixes(
+				s,
+				op.main.par.Prefixsource.eval(),
+				op.main.par.Prefixdest.eval()
+			)
 		self.Scenes.val[scene] = s
 		self.owner.store(scene, s)
 	def Unload(self, scene):
@@ -42,15 +42,34 @@ class Set:
 	def ReloadAll(self):
 		self.UnloadAll()
 		self.LoadAll()
+	def ReplaceScenePathPrefixes(self, scene, src, dst):
+		s = scene
+		for cue in s['cues']:
+			for track in cue['tracks']:
+				source = track.get('source')
+				if source:
+					track['source'] = source.replace(
+						src,
+						dst,
+					)
+		return s
 	def SaveScene(self, scene, path=None): # update attribute and file
-		print("SAVED SCENE:", scene["id"])
 		sid = scene["id"]
-		self.Scenes.val[scene["id"]] = scene
+
+		self.Scenes.val[scene["id"]] = scene # Replace in memory
 		
 		dest = path or self.TOC[sid, 'path'].val
 
 		print(dest, scene)
 
-		with open(dest, "w") as outfile:
+		if op.main.par.Replaceprefix.eval(): # Rewrite
+			scene = self.ReplaceScenePathPrefixes(
+				scene,
+				op.main.par.Prefixdest.eval(),
+				op.main.par.Prefixsource.eval()
+			)
+
+		print("SAVING SCENE:", scene["id"])
+		with open(dest, "w") as outfile: # Output to disk
 		# with open("{}/{}.json".format(sourceDir, sid), "w") as outfile:
 			json.dump(scene, outfile)

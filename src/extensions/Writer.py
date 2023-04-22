@@ -20,7 +20,8 @@ class Writer:
 		for i,t in enumerate(cue['tracks']):
 			if i == 0:
 				continue
-			t["source"] = Launcher.op('bus{}/file'.format(i)).par.file.eval()
+			filename = Launcher.op('bus{}/file'.format(i)).par.file.eval()
+			t["source"] = filename
 		return cue
 	def WriteOpacity(self, cue):
 		for i,t in enumerate(cue['tracks']):
