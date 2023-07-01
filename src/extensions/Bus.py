@@ -6,6 +6,7 @@ class BusClass:
 	def __init__(self, owner):
 		self.o = owner
 		self.SelectStage = DependDict({})
+		self.FX_CHAIN = DependList(self.FxChain())
 		print(self.SelectStage)
 	def Boop(self, s):
 		print(s)
@@ -42,6 +43,7 @@ class BusClass:
 		if reroute:
 			#print('rerouting')
 			self.o.store('fx_chain', nuChain)
+			self.FX_CHAIN = nuChain
 			self.RouteFx()
 		return
 	def KillFx(self, fx):
@@ -53,6 +55,7 @@ class BusClass:
 				break
 			idx += 1
 		self.o.store('fx_chain', a)
+		self.FX_CHAIN = a
 		fx.destroy()
 		self.RouteFx()
 	def SpawnFx(self, path, position=-1):
@@ -68,6 +71,7 @@ class BusClass:
 		else:
 			fxArr.append(newFx)
 		self.o.store('fx_chain', fxArr)
+		self.FX_CHAIN = fxArr
 		self.RouteFx()
 	def RouteFx(self):
 		i = 0
@@ -90,6 +94,7 @@ class BusClass:
 		chain = self.FxChain()
 		chain.insert(nId, chain.pop(oId))
 		self.o.store('fx_chain', chain)
+		self.FX_CHAIN = chain
 		self.RouteFx()
 	def CopyFx(self, path):
 		#print('COPYING', path)
