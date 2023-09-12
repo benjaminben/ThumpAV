@@ -42,6 +42,32 @@ saveSwitcher = {
 	'EXPORT': saveExport,
 }
 
+def loadParameter(param, src):
+	# Load attaches a value to a parameter without returning anything
+	mode = None
+	loaderFunc = None
+	
+	try:
+		mode = src['mode']
+	except NameError:
+		mode = 'CONSTANT'
+	except TypeError:
+		param = src
+		return
+	
+	try:
+		loaderFunc = loadSwitcher[mode]
+	except NameError as ex:
+		print(ex)
+		loaderFunc = loadConstant
+	loaderFunc(param, src['d'])
+
+def saveParameter(param):
+	# Save returns a value to be written to JSON
+	saveFunc = saveSwitcher[param.mode.name]
+	return saveFunc(param)
+
+
 class FxBase:
 	def __init__(self, owner):
 		return
