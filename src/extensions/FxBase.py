@@ -9,9 +9,15 @@ def loadBind(param, val):
 	param.bindExpr = val
 
 def saveConstant(param):
+	v = param.eval()
+	saved = None
+	if isinstance(v, OP):
+		saved = v.path
+	else:
+		saved = v
 	return {
 		'mode': 'CONSTANT',
-		'd': param.eval() }
+		'd': saved }
 
 def saveExpression(param):
 	return {
