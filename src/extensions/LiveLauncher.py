@@ -41,6 +41,8 @@ class LiveLauncher:
 		bus.par.Sourceselect = src
 		bus.par.Sourcetype = 'select'
 		return
+	def SetSourceType(self, idx, t):
+		bus.par.Sourcetype = t
 	def SetOpacities(self, cue):
 		# for (i,p) in enumerate(self.o.op('CTRL').pars(f'Opacity*')):
 		# 	v = cue['tracks'][i]['opacity']
