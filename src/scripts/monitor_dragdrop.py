@@ -13,6 +13,16 @@ def onHoverStartGetAccept(comp, info):
 	Returns:
 		True if comp can receive dragItems
 	"""
+	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
+	try:
+		if len(info['dragItems']) > 2:
+			return False
+		else:
+			return True # accept what is being dragged
+	except:
+		return False
+	###########################################
+	
 	#debug('\nonHoverStartGetAccept comp:', comp.path, '- info:\n', info)
 	try:
 		if len(info['dragItems']) != 1:
@@ -53,6 +63,29 @@ def onDropGetResults(comp, info):
 			'modified': object modified by drop
 	"""
 	
+	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
+	if len(info['dragItems']) == 1:
+		first = info['dragItems'][0]
+		try:
+			if type(first) == tdu.FileInfo:
+				ext.LiveLauncher.SetSource(parent().digits, first.path)
+				return True
+		except:
+			return False
+	else:
+		first = info['dragItems'][1]
+		try:
+			if 'src' in first:
+				ext.LiveLauncher.SetSource(parent().digits, first['src'])
+			if 'cell' in first:
+				ext.LiveLauncher.SetLayer(parent().digits, first['cell'])
+			if 'top' in first:
+				ext.LiveLauncher.SetSelect(parent().digits, first['top'])			
+		except:
+			return False
+	return {'droppedOn': comp}
+	###########################################
+
 	first = info['dragItems'][0]
 	
 	try:

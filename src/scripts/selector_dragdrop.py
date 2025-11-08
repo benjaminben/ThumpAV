@@ -63,6 +63,13 @@ def onDragStartGetItems(comp, info):
 	Returns:
 		A list of dragItems: [object1, object2, ...]
 	"""
+	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
+	p = comp
+	dragItems = [comp, 'PLUGIN_GROUP', [op(f'{p.path}/Wrapper')]]
+	#debug('\nonDragStartGetItems comp:', comp.path, '- info:\n', info)
+	return dragItems
+	###########################################
+
 	p = comp
 	dragItems = ['PLUGIN_GROUP', [op(f'{p.path}/Wrapper')]]
 	#debug('\nonDragStartGetItems comp:', comp.path, '- info:\n', info)

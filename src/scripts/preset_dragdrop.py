@@ -64,6 +64,14 @@ def onDragStartGetItems(comp, info):
 	Returns:
 		A list of dragItems: [object1, object2, ...]
 	"""
+	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
+	preset = json.loads(comp.op('preset').text)
+	dragItems = [comp, 'PLUGIN_PRESET', preset] # drag the comp itself
+	op.LiveLauncher.par.Showfxdroparea = True
+	#debug('\nonDragStartGetItems comp:', comp.path, '- info:\n', info)
+	return dragItems
+	###########################################
+	
 	preset = json.loads(comp.op('preset').text)
 	dragItems = ['PLUGIN_PRESET', preset] # drag the comp itself
 	op.LiveLauncher.par.Showfxdroparea = True
