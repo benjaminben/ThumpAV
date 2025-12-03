@@ -23,6 +23,7 @@ def onHoverStartGetAccept(comp, info):
 	
 def onHoverEnd(comp, info):
 	#debug('\nonHoverEnd comp:', comp.path, '- info:\n', info)
+	return
 
 def onDropGetResults(comp, info):
 	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
@@ -102,4 +103,4 @@ def onDragStartGetItems(comp, info):
 
 def onDragEnd(comp, info):
 	#debug('\nonDragEnd comp:', comp.path, '- info:\n', info)
-	
+	return
