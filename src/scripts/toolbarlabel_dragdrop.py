@@ -103,4 +103,5 @@ def onDragStartGetItems(comp, info):
 
 def onDragEnd(comp, info):
 	#debug('\nonDragEnd comp:', comp.path, '- info:\n', info)
+	op(ipar.LiveLauncher).par.Showfxcopyarea = False
 	return

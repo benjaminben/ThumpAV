@@ -113,7 +113,7 @@ class LiveLauncher:
 		print(data, track)
 		return
 	def StageTrackFx(self, trackIdx):
-		self.o.op(f'ctrl_panels/track{trackIdx}/toggles/fx').par.Value0 = 1
+		self.o.op(f'ctrl_panels/track{trackIdx}/toggles/fx').click()
 		return
 	def SetHistoryAction(self, key, action, label):
 		history.store(key, {'action': pickle.dumps(action), 'label': label})
