@@ -55,11 +55,11 @@ class LiveLauncher:
 	def SetCtrl(self, cue):
 		for t in ctrl_panels:
 			sel = "t{}".format(t.digits)
-			t.op('toggles/blind').par.Value0 = bool(cue['tracks'][t.digits]['blind'])
+			t.op('toggles/blind').par.value0 = bool(cue['tracks'][t.digits]['blind'])
 			if (t.digits == 0): #if master, dip now
 				continue
-			t.op('toggles/mute').par.Value0 = cue['tracks'][t.digits]['mute']
-			t.op('toggles/loop').par.Value0 = cue['tracks'][t.digits]['loop']
+			t.op('toggles/mute').par.value0 = cue['tracks'][t.digits]['mute']
+			t.op('toggles/loop').par.value0 = cue['tracks'][t.digits]['loop']
 		return
 	def SetFx(self, cue):
 		# have to offset - 1... TODO: please standardize

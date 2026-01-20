@@ -1,29 +1,4 @@
-# callbacks for when associated Panel is being dropped on
-
 def onHoverStartGetAccept(comp, info):
-	"""
-	Called when comp needs to know if dragItems are acceptable as a drop.
-
-	Args:
-		comp: the panel component being hovered over
-		info: A dictionary containing all info about hover, including:
-			dragItems: a list of objects being dragged over comp
-			callbackPanel: the panel Component pointing to this callback DAT
-
-	Returns:
-		True if comp can receive dragItems
-	"""
-	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
-	try:
-		if len(info['dragItems']) > 2:
-			return False
-		else:
-			return True # accept what is being dragged
-	except:
-		return False
-	###########################################
-	
-	#debug('\nonHoverStartGetAccept comp:', comp.path, '- info:\n', info)
 	try:
 		if len(info['dragItems']) != 1:
 			return False
@@ -32,60 +7,7 @@ def onHoverStartGetAccept(comp, info):
 	except:
 		return False
 
-def onHoverEnd(comp, info):
-	"""
-	Called when dragItems leave comp's hover area.
-
-	Args:
-		comp: the panel component being hovered over
-		info: A dictionary containing all info about hover, including:
-			dragItems: a list of objects being dragged over comp
-			callbackPanel: the panel Component pointing to this callback DAT
-	"""
-	#debug('\nonHoverEnd comp:', comp.path, '- info:\n', info)
-
 def onDropGetResults(comp, info):
-	"""
-	Called when comp receives a drop of dragItems. This will only be called if
-	onHoverStartGetAccept has returned True for these dragItems.
-
-	Args:
-		comp: the panel component being dropped on
-		info: A dictionary containing all info about drop, including:
-			dragItems: a list of objects being dropped on comp
-			callbackPanel: the panel Component pointing to this callback DAT
-
-	Returns:
-		A dictionary of results with descriptive keys. Some possibilities:
-			'droppedOn': the object receiving the drop
-			'createdOPs': list of created ops in order of drag items
-			'dropChoice': drop menu choice selected
-			'modified': object modified by drop
-	"""
-	
-	### TEMP: 2025 DRAG/DROP BUG WORKAROUND ###
-	if len(info['dragItems']) == 1:
-		first = info['dragItems'][0]
-		try:
-			if type(first) == tdu.FileInfo:
-				ext.LiveLauncher.SetSource(parent().digits, first.path)
-				return True
-		except:
-			return False
-	else:
-		first = info['dragItems'][1]
-		try:
-			if 'src' in first:
-				ext.LiveLauncher.SetSource(parent().digits, first['src'])
-			if 'cell' in first:
-				ext.LiveLauncher.SetLayer(parent().digits, first['cell'])
-			if 'top' in first:
-				ext.LiveLauncher.SetSelect(parent().digits, first['top'])			
-		except:
-			return False
-	return {'droppedOn': comp}
-	###########################################
-
 	first = info['dragItems'][0]
 	
 	try:
@@ -102,36 +24,7 @@ def onDropGetResults(comp, info):
 		return False
 	return {'droppedOn': comp}
 
-# callbacks for when associated Panel is being dragged
-
 def onDragStartGetItems(comp, info):
-	"""
-	Called when information about dragged items is required.
-
-	Args:
-		comp: the panel clicked on to start drag
-		info: A dictionary containing all info about drag
-			callbackPanel: the panel Component pointing to this callback DAT
-
-	Returns:
-		A list of dragItems: [object1, object2, ...]
-	"""
 	dragItems = [parent.Monitor.par.Bus.eval().op('fin')] # drag the comp itself
 	#debug('\nonDragStartGetItems comp:', comp.path, '- info:\n', info)
 	return dragItems
-
-def onDragEnd(comp, info):
-	"""
-	Called when a drag action ends.
-
-	Args:
-		comp: the panel clicked on to start drag
-		info: A dictionary containing all info about drag, including:
-			accepted: True if the drag was accepted, False if not
-			dropResults: a dict of drop results. This is the return value of 
-				onDropGetResults
-			dragItems: the original dragItems for the drag
-			callbackPanel: the panel Component pointing to this callback DAT
-	"""
-	#debug('\nonDragEnd comp:', comp.path, '- info:\n', info)
-	
