@@ -9,10 +9,13 @@ def onHoverStartGetAccept(comp, info):
 
 def onDropGetResults(comp, info):
 	first = info['dragItems'][0]
-	
+	debug(type(first), type(first) == td.outTOP)
 	try:
 		if type(first) == tdu.FileInfo:
 			ext.LiveLauncher.SetSource(parent().digits, first.path)
+			return True
+		if type(first) == td.outTOP:
+			ext.LiveLauncher.SetSelect(parent().digits, first)
 			return True
 		if 'src' in first:
 			ext.LiveLauncher.SetSource(parent().digits, first['src'])
