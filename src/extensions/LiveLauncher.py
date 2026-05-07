@@ -115,6 +115,10 @@ class LiveLauncher:
 	def StageTrackFx(self, trackIdx):
 		self.o.op(f'ctrl_panels/track{trackIdx}/toggles/fx').click()
 		return
+	def OverwriteCurrentBusCues(self):
+		for bus in buses:
+			cuelist = bus.op('cuelist/Effect')
+			cuelist.SaveBusStateToCue(cuelist.par.Selected.eval())
 	def SetHistoryAction(self, key, action, label):
 		history.store(key, {'action': pickle.dumps(action), 'label': label})
 		return
