@@ -13,6 +13,7 @@ class Effect(Plugin):
 		super(Effect, self).__init__(owner)
 		self.CueList = []
 		self.bus = self.owner.parent.Bus
+		self.LatestIdx = 0
 		return
 	def Reset(self):
 		self.Load(default)
@@ -38,6 +39,7 @@ class Effect(Plugin):
 		for f in chain:
 			base.append({'id': f.par.Name.eval(), 'settings': f.Save()})
 		cuelist = self.GetCuelist()
+		print(self.owner, idx, cuelist)
 		if isinstance(idx, int):
 			cuelist[idx] = base
 		else:
@@ -45,6 +47,7 @@ class Effect(Plugin):
 			idx = len(cuelist) - 1
 		self.owner.par.Cuelistjson = cuelist
 		#self.owner.op('ctrl_list').selections = [(idx, 0, idx, 2)]
+		self.LatestIdx = idx
 		return cuelist
 	def LaunchOnDeck(self):
 		od = self.owner.par.Ondeck.eval() 
@@ -53,6 +56,7 @@ class Effect(Plugin):
 	def LaunchCueByIdx(self, idx):
 		cuelist = self.GetCuelist()
 		self.bus.FillFx(cuelist[idx])
+		self.LatestIdx = idx
 	def DeleteIdx(self, idx = 0):
 		cuelist = self.GetCuelist()
 		cuelist.pop(idx)

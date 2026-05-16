@@ -118,7 +118,7 @@ class LiveLauncher:
 	def OverwriteCurrentBusCues(self):
 		for bus in buses:
 			cuelist = bus.op('cuelist/Effect')
-			cuelist.SaveBusStateToCue(cuelist.par.Selected.eval())
+			cuelist.SaveBusStateToCue(cuelist.LatestIdx)
 	def SetHistoryAction(self, key, action, label):
 		history.store(key, {'action': pickle.dumps(action), 'label': label})
 		return

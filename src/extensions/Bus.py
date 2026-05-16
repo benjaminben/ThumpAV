@@ -95,6 +95,7 @@ class BusClass:
 		self.o.store('fx_chain', fxArr)
 		self.FX_CHAIN = fxArr
 		self.RouteFx()
+		return newFx
 	def RouteFx(self):
 		i = 0
 		fx_chain = self.FxChain()
