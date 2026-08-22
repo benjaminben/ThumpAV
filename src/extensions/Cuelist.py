@@ -39,9 +39,11 @@ class Effect(Plugin):
 		for f in chain:
 			base.append({'id': f.par.Name.eval(), 'settings': f.Save()})
 		cuelist = self.GetCuelist()
-		print(self.owner, idx, cuelist)
 		if isinstance(idx, int):
-			cuelist[idx] = base
+			try:
+				cuelist[idx] = base
+			except IndexError as ie:
+				debug(ie)
 		else:
 			cuelist.append(base)
 			idx = len(cuelist) - 1

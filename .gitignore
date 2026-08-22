@@ -15,4 +15,28 @@ user/set/*
 
 .DS_Store
 
+TDImportCache
+
+# TODO: Generalize agent flows
 mcp-playground.toe
+CLAUDE.md
+.claude
+AGENTS.md
+SPEC*.md
+.embody
+externalizations.tsv
+
+# Embody / Envoy (auto-managed)
+Backup/
+logs/
+CrashAutoSave*
+.venv/
+.mcp.json
+.tdn_backup/
+opencode.json
+.embody/*
+!.embody/project.json
+.claude/settings.local.json
+.claude/projects/
+briefs/
+__pycache__/
